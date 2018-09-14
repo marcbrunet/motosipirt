@@ -2,13 +2,12 @@
 import os
 import can
 import datetime
-from data.views import addData
 
 class readValues():
 
     canbus = None
     canbus_interface = 'can0'
-    logdir = "../log"
+    logdir = "log"
     logfd = None
 
     values = {}
@@ -17,24 +16,28 @@ class readValues():
         # Configure CAN Bus Device
         if os.environ.get('CANDEV'):
             self.canbus_interface = os.environ.get('CANDEV')
-        self.setInitValues()
         self.__initLogFile()
-        self.initCanBusUpdater()
-        self.canbus = can.interface.Bus(self.canbus_interface, bustype='socketcan')
+        try:
+            self.canbus = can.interface.Bus(self.canbus_interface, bustype='socketcan')
+        except:
+            pass
 
     def __del__(self):
         self.logfd.close()
 
     def __initLogFile(self):
-        ts = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-        self.logfd = open(self.logdir + '/motospirit-' + ts + '.csv', 'w')
+        ts = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+        try:
+            self.logfd = open(self.logdir + '/motospirit-' + ts + '.csv', 'w')
+        except:
+            os.makedirs(self.logdir)
+            self.logfd = open(self.logdir + '/motospirit-' + ts + '.csv', 'w')
         self.logfd.write("HORA, RPM, SOC, Tbat, Tdriver, Tengine, Vbat, Imax, Vmincell, Vmaxcell, Tmincell, Tmaxcell\n")
 
     def canBusUpdater(self):
         self.__getCanBusValues()
         self.__logValues()
-        addData(self.values)
-
+        return self.values
 
     def __logValues(self):
         self.logfd.write(

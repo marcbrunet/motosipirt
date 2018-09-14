@@ -2,20 +2,38 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from datetime import datetime
+from django.utils.timezone import now
+
+
 # Create your models here.
 
+class lectura(models.Model):
+    RPM = models.IntegerField()
+    Tems = models.DateTimeField(auto_now_add=True)
+    SOC = models.IntegerField()
+    Tbat = models.IntegerField()
+    Tdriver = models.IntegerField()
+    Tengine = models.IntegerField()
+    Vbat = models.IntegerField()
+    Imax = models.IntegerField()
+    Vmincell = models.IntegerField()
+    Vmaxcell = models.IntegerField()
+    Tmincell = models.IntegerField()
+    Tmaxcell = models.IntegerField()
 
-class lectura (models.Model):
-    Tems = models.DateTimeField(default=datetime.now())
-    RPM = models.IntegerField(max_length=40000)
-    SOC = models.IntegerField(max_length=500)
-    Tbat = models.IntegerField(max_length=500)
-    Tdriver = models.IntegerField(max_length=500)
-    Tengine = models.IntegerField(max_length=500)
-    Vbat = models.IntegerField(max_length=1000)
-    Imax = models.IntegerField(max_length=5000)
-    Vmincell = models.IntegerField(max_length=10000)
-    Vmaxcell = models.IntegerField(max_length=10000)
-    Tmincell = models.IntegerField(max_length=10000)
-    Tmaxcell = models.IntegerField(max_length=10000)
+    def crea(self, data):
+        self.Tems = now()
+        self.RPM = data['RPM']
+        self.SOC = data['SOC']
+        self.Tbat = data['Tbat']
+        self.Tdriver = data['Tdriver']
+        self.Tengine = data['Tengine']
+        self.Vbat = data['Vbat']
+        self.Imax = data['Imax']
+        self.Vmincell = data['Vmincell']
+        self.Vmaxcell = data['Vmaxcell']
+        self.Tmincell = ['Tmincell']
+        self.Tmaxcell = data['Tmaxcell']
+
+    def __unicode__(self):
+        return str(self.Tems)

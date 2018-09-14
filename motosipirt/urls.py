@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from data.views import index, refresh
+from data.views import index, refresh, ReadData
 urlpatterns = [
     url(r'^display/refresh', refresh),
     url(r'^index/', index),
     url(r'^admin/', admin.site.urls),
+    url(r'^test/', ReadData),
 ]

@@ -1,0 +1,18 @@
+table {
+    table-layout: fixed ;
+    width: 100% ;
+    border: 2px solid #d1cad0;
+}
+td,th {
+    width: 12.5% ;
+    text-align: center;
+    font-size: 2.2vw;
+}
+
+th{
+    color: #5e5b5e;
+}
+
+td{
+    font-weight: bold;
+}

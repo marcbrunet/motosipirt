@@ -4,11 +4,11 @@ from __future__ import unicode_literals
 import random
 from datetime import datetime
 
-from celery.schedules import crontab
-from celery.task import periodic_task
+#from celery.schedules import crontab
+#from celery.task import periodic_task
 from django.http.response import JsonResponse
 from django.shortcuts import render
-from models import lectura
+#from models import lectura
 from CanBus.ReadValues import readValues
 from datetime import timedelta
 inici = True
@@ -16,7 +16,7 @@ test = True
 canBus = readValues()
 
 
-@periodic_task(run_every=timedelta(seconds=1))
+#@periodic_task(run_every=timedelta(seconds=1))
 def ReadData():
     data = {'RPM': random.randint(0, 8000), 'SOC': random.randint(0,100), 'Tbat': random.randint(0,200),
                 'Tdriver': random.randint(0,200), 'Tengine': random.randint(0,100), 'Vbat':random.randint(0,100),
@@ -38,20 +38,34 @@ def index(request):
     rpm = datetime.now().second*100
     motorTemperature = 100
     speed = 210
-    values['batteryPercentage'] = batteryPercentage
-    values['rpm'] = rpm
-    values['motorTemperature'] = motorTemperature
-    values['speed'] = speed
-    return render(request, 'display.html', values)
+    values['RPM'] = rpm
+    values['Imax'] = rpm
+    values['Vbat'] = rpm
+    values['SOC'] = rpm
+    values['Vmincell'] = rpm
+    values['Vmaxcell'] = rpm
+    values['Tmincell'] = rpm
+    values['Tmaxcell'] = rpm
+    values['Tbat'] = rpm
+    values['Tengine'] = rpm
+    values['Tdriver'] = rpm
+    return render(request, 'new_display.html', values)
 
 def refresh(request):
     values = {}
     batteryPercentage = 100 - int((datetime.now().second*100/60))
-    rpm = datetime.now().microsecond*6000/1000000
+    rpm = datetime.now().microsecond*8/1000
     motorTemperature = 100 + random.randint(-10,10)
     speed = random.randint(0, 201)
-    values['batteryPercentage'] = batteryPercentage
-    values['rpm'] = rpm
-    values['motorTemperature'] = motorTemperature
-    values['speed'] = speed
+    values['RPM'] = rpm
+    values['Imax'] = rpm
+    values['Vbat'] = rpm
+    values['SOC'] = rpm
+    values['Vmincell'] = rpm
+    values['Vmaxcell'] = rpm
+    values['Tmincell'] = rpm
+    values['Tmaxcell'] = rpm
+    values['Tbat'] = rpm
+    values['Tengine'] = rpm
+    values['Tdriver'] = rpm
     return JsonResponse(values)

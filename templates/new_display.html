@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{% static 'node_modules/chart.js/dist/Chart.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <script src="{% static 'node_modules/jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/gauge.min.js' %}"></script>
+    <script src="{% static 'js/displayCharts_v2.js' %}"></script>
+</head>
+<body>
+
+<div id="rmp-div">
+    <div style="height:fit-content;position: relative;">
+        <h1 style="font-weight:bold;z-index:10;text-align: center;position:absolute;top:15px;width: 100%;">RMP: <span id="rpm_value">{{ RPM }}</span> </h1>
+        <div class="chart-container" style="position: relative; height:20vh; width:100vw;">
+            <canvas id="rpm_chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div id="center_content">
+
+</div>
+
+<br>
+
+<div id="bottom_content" style="margin: 0;">
+    <table style="width:100%" border="true">
+      <tr>
+        <th>SOC</th>
+        <th>Vmincell</th>
+        <th>Vmaxcell</th>
+        <th>Tmincell</th>
+        <th>Tmaxcell</th>
+        <th>Tbat</th>
+        <th>Tengine</th>
+        <th>Tdriver</th>
+      </tr>
+      <tr>
+        <td>{{ SOC }}</td>
+        <td>{{ Vmincell }}</td>
+        <td>{{ Vmaxcell }}</td>
+        <td>{{ Tmincell }}</td>
+        <td>{{ Tmaxcell }}</td>
+        <td>{{ Tbat }}</td>
+        <td>{{ Tengine }}</td>
+        <td>{{ Tdriver }}</td>
+      </tr>
+    </table>
+</div>
+
+
+
+<script>
+    function refresh(){
+        var url = "http://127.0.0.1:8000/display/refresh";
+        $.getJSON(url,
+            function(data) {
+               // rpm_chart(data['rpm']);
+               // speed_chart(data['speed']);
+                rmp_chart(data['RPM']);
+                //motor_temp_value(data['motorTemperature']);
+            });
+
+        setTimeout(refresh, 1000);
+    }
+    refresh();
+</script>
+</body>
+</html>

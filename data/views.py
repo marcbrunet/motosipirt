@@ -34,22 +34,20 @@ def ReadData():
 
 def index(request):
     values = {}
-    batteryPercentage = 25
-    rpm = datetime.now().second*100
-    motorTemperature = 100
-    speed = 210
-    values['RPM'] = rpm
-    values['Imax'] = rpm
-    values['Vbat'] = rpm
-    values['SOC'] = rpm
-    values['SOC_LV'] = rpm
-    values['Vmincell'] = rpm
-    values['Vmaxcell'] = rpm
-    values['Tmincell'] = rpm
-    values['Tmaxcell'] = rpm
-    values['Tbat'] = rpm
-    values['Tengine'] = rpm
-    values['Tdriver'] = rpm
+    values['RPM'] = random.randint(0, 8000)
+    values['Imax'] = random.randint(0, 200)
+    values['Vbat'] = random.randint(0, 200)
+    values['SOC'] = random.randint(0, 100)
+    values['SOC_LV'] = random.randint(0, 100)
+    values['Vmincell'] = random.randint(0, 200)
+    values['Vmaxcell'] = random.randint(0, 200)
+    values['Tmincell'] = random.randint(0, 200)
+    values['Tmaxcell'] = random.randint(0, 200)
+    values['Tbat'] = random.randint(0, 200)
+    values['Tbat_LV'] = random.randint(0, 200)
+    values['Tengine'] = random.randint(0, 200)
+    values['Tdriver'] = random.randint(0, 200)
+    values['Speed'] = random.randint(0, 200)
     return render(request, 'new_display.html', values)
 
 def refresh(request):

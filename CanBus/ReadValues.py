@@ -1,6 +1,6 @@
 
 import os
-import can
+#import can
 import datetime
 
 class readValues():

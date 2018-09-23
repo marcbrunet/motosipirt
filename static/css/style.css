@@ -1,18 +1,27 @@
-table {
-    table-layout: fixed ;
-    width: 100% ;
-    border: 2px solid #d1cad0;
+:root {
+    --hv-color: #fff7fe;
 }
-td,th {
-    width: 12.5% ;
+
+body{
+    background-color: #837f82;
+}
+
+.front-color{
+    background-color: var(--hv-color);
+}
+
+table,td,th {
+    vertical-align: top;
     text-align: center;
-    font-size: 2.2vw;
 }
 
-th{
-    color: #5e5b5e;
+table{
 }
 
-td{
-    font-weight: bold;
+.bottom_table_unit{
+    color: #837f82
+}
+
+.bottom_table_value{
+    color: #000
 }

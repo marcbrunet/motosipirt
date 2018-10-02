@@ -1,172 +1,91 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="{% static 'node_modules/chart.js/dist/Chart.js' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
     <script src="{% static 'node_modules/jquery/dist/jquery.js' %}"></script>
     <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.js' %}"></script>
     <script src="{% static 'js/gauge.min.js' %}"></script>
     <script src="{% static 'js/displayCharts.js' %}"></script>
-
+    <link rel="stylesheet" type="text/css" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 <body>
+<div style="max-height: 100%;">
+<table style="width: 99%;">
+    <tr>
+        <td style="width: 40%;">
 
-<div class="container">
-        <div class="row" style="margin-top:5vh;">
-            <div class="col-md-6">
-                <div id="rpm-div">
-                    <h1 style="text-align: center;">RPM: <span id="rpm_value">{{ rpm }}</span></h1>
-                    <div class="chart-container" style="width:100%;max-height: 40vh;margin-top:-5vh;">
-                        <canvas id="rpmChart" style="width: 100%;"></canvas>
-                    </div>
-                        <script>
-                        var rpm = "{{ rpm }}"
-                        var opts = {
-                          angle: 0.04, // The span of the gauge arc
-                          lineWidth: 0.44, // The line thickness
-                          radiusScale: 0.78, // Relative radius
-                          pointer: {
-                            length: 0.6, // // Relative to gauge radius
-                            strokeWidth: 0.035, // The thickness
-                            color: '#000000' // Fill color
-                          },
-                          limitMax: false,     // If false, max value increases automatically if value > maxValue
-                          limitMin: false,     // If true, the min value of the gauge will be fixed
-                          colorStart: '#6FADCF',   // Colors
-                          colorStop: '#8FC0DA',    // just experiment with them
-                          strokeColor: '#E0E0E0',  // to see which ones work best for you
-                          generateGradient: true,
-                          highDpiSupport: true,     // High resolution support
-                          staticLabels: {
-                              font: "15px sans-serif",  // Specifies font
-                              labels: [0,1000,2000,3000,4000,5000,6000],  // Print labels at these values
-                              color: "#000000",  // Optional: Label text color
-                              fractionDigits: 0  // Optional: Numerical precision. 0=round off.
-                    },
-
-                        };
-                        var target = document.getElementById('rpmChart'); // your canvas element
-                        var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-                        gauge.maxValue = 6000; // set max gauge value
-                        gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-                        gauge.animationSpeed = 1; // set animation speed (32 is default value)
-                        gauge.set(rpm); // set actual value
-                    </script>
+            <table class ="front-color"style="width: 100%;height:60vh;margin-left:10px;margin-top:10px;border:3px solid var(--hv-color);">
+                <tr style="text-align:center;">
+                    <td style="width: 40%;">
+                        <div style="padding-top: 10px;width:100%;font-size: 2vw;font-weight: bold;">SOC</div>
+                        <div class="chart-container" style="height:41vh; width: 13vw;">
+                            <canvas id="soc_chart"></canvas>
+                        </div>
+                        <div style="width:100%;text-align:center;font-size: 3vw;font-weight: bold;margin-bottom: 10px;"><span id="soc_value">x</span>%</div>
+                    </td>
+                    <td style="width: 60%;">
+                        <div style="margin-top: 5vh;height:50%;font-size: 4vw;padding:  10% 0;font-weight: bold;"><span id="imax_value">{{ Imax }}</span>A</div>
+                        <div style="height:50%;font-size: 4vw;padding:  10% 0;font-weight: bold;"><span id="vbat_value">{{ Vbat }}</span>V</div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td style="width: 60%;padding:0;">
+        <div class="front-color" id="rmp-div" style="margin: 10px;margin-left: 20px;height:60vh;">
+            <div style="height: fit-content;padding-top: 20px;">
+                <div class="chart-container" style="height:30vh; width:52vw;">
+                    <canvas id="rpm_chart"></canvas>
                 </div>
-            </div>
-            <div class="col-md-6" style="text-align: center;">
-                <div id="speed-div">
-                    <h1 style="text-align: center;">SPEED: <span id="speed_value">{{ speed }}</span> km/h</h1>
-                    <div class="chart-container" style="width:100%;max-height: 40vh;margin-top:-5vh;">
-                        <canvas id="speedChart" style="width: 100%;"></canvas>
-                    </div>
-                    <script>
-                        var speed = "{{ speed }}"
-                        var opts = {
-                          angle: 0.04, // The span of the gauge arc
-                          lineWidth: 0.44, // The line thickness
-                          radiusScale: 0.78, // Relative radius
-                          pointer: {
-                            length: 0.6, // // Relative to gauge radius
-                            strokeWidth: 0.035, // The thickness
-                            color: '#000000' // Fill color
-                          },
-                          limitMax: false,     // If false, max value increases automatically if value > maxValue
-                          limitMin: false,     // If true, the min value of the gauge will be fixed
-                          colorStart: '#6FADCF',   // Colors
-                          colorStop: '#8FC0DA',    // just experiment with them
-                          strokeColor: '#E0E0E0',  // to see which ones work best for you
-                          generateGradient: true,
-                          highDpiSupport: true,     // High resolution support
-                          staticLabels: {
-                              font: "15px sans-serif",  // Specifies font
-                              labels: [10,30,50,70,90,110, 130, 150, 170,190,210,230,250,270,290,310],  // Print labels at these values
-                              color: "#000000",  // Optional: Label text color
-                              fractionDigits: 0  // Optional: Numerical precision. 0=round off.
-                    },
-
-                        };
-                        var target = document.getElementById('speedChart'); // your canvas element
-                        var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-                        gauge.maxValue = 310; // set max gauge value
-                        gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-                        gauge.animationSpeed = 1; // set animation speed (32 is default value)
-                        gauge.set(speed); // set actual value
-                    </script>
+                <div id="rpm_value" style="font-weight:bold;font-size:8vw;text-align:center;width:100%;height:8vw;line-height:8vw;">
+                    {{ RPM }}
+                </div>
+                <div style="font-weight:bold;font-size:4vw;text-align:center;width:100%;height:4vw;line-height:4vw;">
+                    RPM
                 </div>
             </div>
         </div>
-        <div class="row" >
-            <div class="col-md-6" style="height: 40vh;text-align: center;display: flex;justify-content: center;align-items: center;">
-                <h1>TEMPERATURA DEL MOTOR: <span id="motor_temperature">{{ motorTemperature }}</span> ºC</h1>
-            </div>
-            <div class="col-md-6">
-                <div id="battery-div">
-                    <h1 style="text-align: center; width:40vw;">BATTERY: <span id="battery_value">{{ batteryPercentage }}</span> %</h1>
-
-                    <div class="chart-container" style="position: relative; height:10vh; width:40vw">
-                        <canvas id="batteryChart"></canvas>
-                    </div>
-                    <script>
-                        var batteryValue = "{{ batteryPercentage }}"
-                        var ctx = document.getElementById("batteryChart").getContext('2d');
-                        var batteryChart = new Chart(ctx, {
-                          type: 'horizontalBar',
-                          data: {
-                            datasets: [{
-                                data: [batteryValue],
-                                backgroundColor: [
-                                  '#8FC0DA'
-                                ],
-                                borderColor: [
-                                  'rgb(100, 100, 100)'
-                                ],
-                                borderWidth: 2
-                              },
-                              {
-                                data: [100-batteryValue],
-                                backgroundColor: [
-                                  'rgba(100, 100, 100,0.8)'
-                                ],
-                                borderColor: [
-                                  'rgb(100, 100, 100)'
-                                ],
-                                borderWidth: 2
-                              }
-                            ]
-                          },
-                          options: {
-                              animation: false,
-                              legend: {
-                                    display: false
-                                },
-                                tooltips: {
-                                    enabled: false
-                                },
-                            scales: {
-                              yAxes: [{
-                                stacked: true,
-                                ticks: {
-                                  beginAtZero: true
-                                }
-                              }],
-                              xAxes: [{
-                                stacked: true,
-                                ticks: {
-                                  beginAtZero: true
-                                }
-                              }]
-
-                            }
-                          }
-                        });
-                    </script>
-                </div>
-            </div>
+        </td>
+    </tr>
+</table>
+<div id="bottom_content" style="margin-top: 10px;margin-left:10px;margin-right:10px;font-weight: bold">
+    <table width="97%;"><tr>
+        <td style="width: 70%;">
+                <table style="width:100%;border:3px solid var(--hv-color);" border="true;">
+                  <tr style="font-size: 2.5vw;">
+                    <th class="front-color" >Vmincell</th>
+                    <th class="front-color" >Vmaxcell</th>
+                    <th class="front-color">Tmincell</th>
+                    <th class="front-color" >Tmaxcell</th>
+                    <th class="front-color" >Tbat</th>
+                  </tr>
+                  <tr style="font-size: 2.5vw;">
+                    <td class="bottom_table_unit front-color"><span class="bottom_table_value" id="vmincell_value">{{ Vmincell }}</span> V</td>
+                    <td class="bottom_table_unit front-color"><span class="bottom_table_value" id="vmaxvcell_value">{{ Vmaxcell }}</span> V</td>
+                    <td class="bottom_table_unit front-color"><span class="bottom_table_value" id="tmincell_value">{{ Tmincell }}</span> ºC</td>
+                    <td class="bottom_table_unit front-color"><span class="bottom_table_value" id="tmaxcell_value">{{ Tmaxcell }}</span> ºC</td>
+                    <td class="bottom_table_unit front-color"><span class="bottom_table_value" id="tbat_value">{{ Tbat }}</span> ºC</td>
+                    </tr>
+                </table>
+        </td>
+        <td style="width: 30%;">
+                <table style="width:100%;border:3px solid var(--hv-color);margin-left: 20px;" border="true">
+                  <tr style="font-size: 2.5vw;">
+                    <th class="front-color">Tengine</th>
+                    <th class="front-color">Tdriver</th>
+                  </tr>
+                  <tr style="font-size: 2.5vw;">
+                    <td class="bottom_table_unit front-color"><span class="bottom_table_value" id="tengine_value">{{ Tengine }}</span> ºC</td>
+                    <td class="bottom_table_unit front-color"><span class="bottom_table_value" id="tdriver_value">{{ Tdriver }}</span> ºC</td>
+                  </tr>
+                </table>
+        </td>
+    </tr></table>
         </div>
+
 </div>
 
 <script>
@@ -174,10 +93,9 @@
         var url = "http://127.0.0.1:8000/display/refresh";
         $.getJSON(url,
             function(data) {
-                rpm_chart(data['rpm']);
-                speed_chart(data['speed']);
-                battery_chart(data['batteryPercentage']);
-                motor_temp_value(data['motorTemperature']);
+                rmp_chart(data['RPM']);
+                soc_chart(data['SOC']);
+                written_values(data);
             });
 
         setTimeout(refresh, 1000);

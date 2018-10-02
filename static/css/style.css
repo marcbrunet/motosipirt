@@ -1,0 +1,27 @@
+:root {
+    --hv-color: #fff7fe;
+}
+
+body{
+    background-color: #837f82;
+}
+
+.front-color{
+    background-color: var(--hv-color);
+}
+
+table,td,th {
+    vertical-align: top;
+    text-align: center;
+}
+
+table{
+}
+
+.bottom_table_unit{
+    color: #837f82
+}
+
+.bottom_table_value{
+    color: #000
+}

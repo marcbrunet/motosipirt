@@ -1,106 +1,64 @@
-function rpm_chart(value) {
-    var rpm =value;
-    var opts = {
-      angle: 0.04, // The span of the gauge arc
-      lineWidth: 0.44, // The line thickness
-      radiusScale: 0.78, // Relative radius
-      pointer: {
-        length: 0.6, // // Relative to gauge radius
-        strokeWidth: 0.035, // The thickness
-        color: '#000000' // Fill color
-      },
-      limitMax: false,     // If false, max value increases automatically if value > maxValue
-      limitMin: false,     // If true, the min value of the gauge will be fixed
-      colorStart: '#6FADCF',   // Colors
-      colorStop: '#8FC0DA',    // just experiment with them
-      strokeColor: '#E0E0E0',  // to see which ones work best for you
-      generateGradient: true,
-      highDpiSupport: true,     // High resolution support
-      staticLabels: {
-          font: "15px sans-serif",  // Specifies font
-          labels: [0,1000,2000,3000,4000,5000,6000],  // Print labels at these values
-          color: "#000000",  // Optional: Label text color
-          fractionDigits: 0  // Optional: Numerical precision. 0=round off.
-        },
 
-    };
-    var target = document.getElementById('rpmChart'); // your canvas element
-    var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-    gauge.maxValue = 6000; // set max gauge value
-    gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-    gauge.animationSpeed = 1; // set animation speed (32 is default value)
-    gauge.set(rpm); // set actual value
+var red = '#ff6c62';
+var yellow= '#f9f781';
+var green = '#c1ee6e';
 
-    var rpm = document.getElementById("rpm_value");
-    rpm.textContent = value;
+/*
+This values are used to define the bar charts limits
+You may change this values
+ */
+var rpm_bar_max_value = 7000; // max value for the rpm bar axis
+var rpm_low = 4500; // rpm:first limit value (separates the yellow and green ranges)
+var rpm_high = 5000; // rpm: second limit value (separates green and red ranges)
+var soc_low = 33; // soc: first limit value (separates red and yellow ranges)
+var soc_high = 66; // soc: second limit value (separates yellow and green ranges)
+
+/*Given a value, a lower and higher limit and three colors
+* returns the pertinent color
+* */
+function get_color(value,low,high,c1,c2,c3){
+    if(value < low ){
+        color = c1;
+    }
+    else if(value >= low && value <= high){
+        color = c2;
+    }
+    else{
+        color = c3;
+    }
+    return color;
 }
 
-function speed_chart(value){
-    var speed = value;
-    var opts = {
-      angle: 0.04, // The span of the gauge arc
-      lineWidth: 0.44, // The line thickness
-      radiusScale: 0.78, // Relative radius
-      pointer: {
-        length: 0.6, // // Relative to gauge radius
-        strokeWidth: 0.035, // The thickness
-        color: '#000000' // Fill color
-      },
-      limitMax: false,     // If false, max value increases automatically if value > maxValue
-      limitMin: false,     // If true, the min value of the gauge will be fixed
-      colorStart: '#6FADCF',   // Colors
-      colorStop: '#8FC0DA',    // just experiment with them
-      strokeColor: '#E0E0E0',  // to see which ones work best for you
-      generateGradient: true,
-      highDpiSupport: true,     // High resolution support
-      staticLabels: {
-          font: "15px sans-serif",  // Specifies font
-          labels: [10,30,50,70,90,110, 130, 150, 170,190,210,230,250,270,290,310],  // Print labels at these values
-          color: "#000000",  // Optional: Label text color
-          fractionDigits: 0  // Optional: Numerical precision. 0=round off.
-},
-
-    };
-    var target = document.getElementById('speedChart'); // your canvas element
-    var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-    gauge.maxValue = 310; // set max gauge value
-    gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-    gauge.animationSpeed = 1; // set animation speed (32 is default value)
-    gauge.set(speed); // set actual value
-
-    var speed = document.getElementById("speed_value");
-    speed.textContent = value;
-}
-
-function battery_chart(value){
-    var batteryValue = value;
-    var ctx = document.getElementById("batteryChart").getContext('2d');
-    var batteryChart = new Chart(ctx, {
+function rmp_chart(rpmValue){
+    var color = get_color(rpmValue,rpm_low,rpm_high,yellow,green,red)
+    var ctx = document.getElementById("rpm_chart").getContext('2d');
+    var rpmChart = new Chart(ctx, {
       type: 'horizontalBar',
       data: {
         datasets: [{
-            data: [batteryValue],
+            data: [rpmValue],
             backgroundColor: [
-              '#8FC0DA'
+              color
             ],
             borderColor: [
-              'rgb(100, 100, 100)'
+              '#d1cad0'
             ],
             borderWidth: 2
           },
           {
-            data: [100-batteryValue],
+            data: [rpm_bar_max_value-rpmValue],
             backgroundColor: [
-              'rgba(100, 100, 100,0.8)'
+              '#d1cad0'
             ],
             borderColor: [
-              'rgb(100, 100, 100)'
+              '#d1cad0'
             ],
             borderWidth: 2
           }
         ]
       },
       options: {
+          maintainAspectRatio: false,
           animation: false,
           legend: {
                 display: false
@@ -112,24 +70,164 @@ function battery_chart(value){
           yAxes: [{
             stacked: true,
             ticks: {
-              beginAtZero: true
+                beginAtZero: true
             }
           }],
           xAxes: [{
             stacked: true,
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+                min: 0,
+                max: rpm_bar_max_value
             }
           }]
 
         }
       }
     });
-    var battery = document.getElementById("battery_value");
-    battery.textContent = value;
 }
 
-function motor_temp_value(value){
-    var motor = document.getElementById("motor_temperature");
-    motor.textContent = value;
+function soc_chart(socValue){
+    var color = get_color(socValue,soc_low,soc_high,red,yellow,green);
+    var ctx = document.getElementById("soc_chart").getContext('2d');
+    var socChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        datasets: [{
+            data: [socValue],
+            backgroundColor: [
+              color
+            ],
+            borderColor: [
+              '#d1cad0'
+            ],
+            borderWidth: 2
+          },
+          {
+            data: [100-socValue],
+            backgroundColor: [
+              '#d1cad0'
+            ],
+            borderColor: [
+              '#d1cad0'
+            ],
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+          maintainAspectRatio: false,
+          animation: false,
+          legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+        scales: {
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              display: false
+            },
+            gridLines: {
+                display:false,
+                drawBorder: false,
+            }
+          }],
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              display: false
+            },
+            gridLines: {
+                display:false,
+                drawBorder: false,
+            }
+          }]
+
+        },
+        axes: {display:false}
+      }
+    });
+}
+
+function soc_chart_lv(socValue){
+    var color = get_color(socValue,soc_low,soc_high,red,yellow,green);
+    var ctx = document.getElementById("soc_chart_lv").getContext('2d');
+    var socChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        datasets: [{
+            data: [socValue],
+            backgroundColor: [
+              color
+            ],
+            borderColor: [
+              '#d1cad0'
+            ],
+            borderWidth: 2
+          },
+          {
+            data: [100-socValue],
+            backgroundColor: [
+              '#d1cad0'
+            ],
+            borderColor: [
+              '#d1cad0'
+            ],
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+          maintainAspectRatio: false,
+          animation: false,
+          legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+        scales: {
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              display: false
+            },
+            gridLines: {
+                display:false,
+                drawBorder: false,
+            }
+          }],
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              display: false
+            },
+            gridLines: {
+                display:false,
+                drawBorder: false,
+            }
+          }]
+
+        },
+        axes: {display:false}
+      }
+    });
+}
+
+function written_values(data){
+    document.getElementById("soc_value").textContent = data['SOC'];
+    document.getElementById("rpm_value").textContent = data['RPM'];
+    document.getElementById("vmincell_value").textContent = data['Vmincell'];
+    document.getElementById("vmaxvcell_value").textContent = data['Vmaxcell'];
+    document.getElementById("tmincell_value").textContent = data['Tmincell'];
+    document.getElementById("tmaxcell_value").textContent = data['Tmaxcell'];
+    document.getElementById("tbat_value").textContent = data['Tbat'];
+    document.getElementById("tengine_value").textContent = data['Tengine'];
+    document.getElementById("tdriver_value").textContent = data['Tdriver'];
+    document.getElementById("imax_value").textContent = data['Imax'];
+    document.getElementById("vbat_value").textContent = data['Vbat'];
+
 }

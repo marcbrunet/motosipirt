@@ -45,10 +45,10 @@ def index(request):
 
 def refresh(request):
     values = {}
-    batteryPercentage = 100 - int((datetime.now().second*100/60))
-    rpm = datetime.now().microsecond*6000/1000000
-    motorTemperature = 100 + random.randint(-10,10)
-    speed = random.randint(0, 201)
+    batteryPercentage = 60
+    rpm = 0
+    motorTemperature = 30
+    speed = 0
     values['batteryPercentage'] = batteryPercentage
     values['rpm'] = rpm
     values['motorTemperature'] = motorTemperature
